@@ -1,0 +1,91 @@
+{% extends "account/base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block head_title %}{% trans "Signup" %}{% endblock %}
+
+{% block content %}
+<style>
+  
+</style>
+<div class="login-form-design"> 
+  <div>
+    <h1>{% trans "Sign Up" %}</h1>
+  
+  <p>{% blocktrans %}Already have an account? Then please <a href="{{ login_url }}">sign in</a>.{% endblocktrans %}</p>
+  
+  <form class="signup log-design grid-design" id="signup_form" method="post" enctype="multipart/form-data" action="{% url 'account_signup' %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    {% if redirect_field_value %}
+    <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+    {% endif %}
+    <div class="log-buttons" id="grid-boton-register">
+      <button type="submit">{% trans "Sign Up" %} &raquo;</button>
+    </div>
+    
+  </form>
+  
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+ 
+<script src="{% static '\jquery\jquery.js' %}"></script>
+<script>
+$('#id_perfil_photo').parent().css("align-items", "center")
+$('#id_perfil_photo').parent().css("grid-column","2/2")
+$('#id_perfil_photo').parent().css("grid-row", " 1/8")
+//
+$('#id_email').parent().css("grid-column","1/2")
+$('#id_email').parent().css("grid-row", " 1")
+//
+$('#id_full_name').parent().css("grid-column","1/2")
+$('#id_full_name').parent().css("grid-row", " 2")
+//
+$('#id_username').parent().css("grid-column","1/2")
+$('#id_username').parent().css("grid-row", " 3")
+//
+$('#id_password1').parent().css("grid-column","1/2")
+$('#id_password1').parent().css("grid-row", " 4")
+//
+$('#id_password2').parent().css("grid-column","1/2")
+$('#id_password2').parent().css("grid-row", " 5")
+//
+$('#grid-boton-register').css("grid-column","1/4")
+$('#grid-boton-register').css("grid-row", " 6")
+
+$('.errorlist').css("grid-column","1/4")
+$('.errorlist').css("grid-row", " 7")
+$('.errorlist').css("color", "red")
+
+
+
+
+
+$('#id_perfil_photo').attr("onchange", "updatePreview(this, 'image-preview')")
+$('#id_perfil_photo').parent().append(`
+<div class="text-center">
+                      <img id="image-preview" 
+                           src="https://via.placeholder.com/400"
+                           style="width:300px"
+                           class="rounded rounded-circle" alt="placeholder">
+                  </div>
+`)
+
+function updatePreview(input, target) {
+  let file = input.files[0];
+  let reader = new FileReader();
+
+  reader.readAsDataURL(file);
+  reader.onload = function () {
+    let img = document.getElementById(target);
+    // can also use "this.result"
+    img.src = reader.result;
+  }
+}
+    </script>
+{% endblock extra_js %}
+

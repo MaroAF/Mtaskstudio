@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="text-align: center; margin-top: 120px;">
+    <h1>Datos del Perfil</h1>
+</div>
+<hr>
+<div class="sessions-wrapper">
+    <div class="view-profile-info">
+        <div class="image-content">
+            <div class="photografy_profile img-profile" style="background-image: url({{user.perfil_photo.url}});"></div>
+        </div>
+        <div class="data-profile">
+            <p><span>Nombre Completo:</span> {{user.full_name}}</p>
+        </div>
+    </div>
+    <div class="profile-options">2</div>
+    {% if user.subscription.pricing.name != "Free Trial" %}
+    {% if user.subscription.status != "canceled"%}
+    {% if user.subscription.pricing.name != "" %}
+    <form method="post" class="py-3 mt-3 inline-flex float-right"
+        action="{% url 'user:cancel-subscription' request.user.username %}">
+        {% csrf_token %}
+        {{ form }}
+        <button
+            class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-red-700 bg-red-100 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+            type="submit">
+            Cancelar Subscripcion
+        </button>
+    </form>
+    {% endif %}
+    {% endif %}
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    var ancho = $(".img-profile").width()
+    $(".img-profile").css("height",ancho)
+    $( window ).resize(function() {
+        var ancho = $(".img-profile").width()
+    $(".img-profile").css("height",ancho)
+});
+    
+</script>
+{% endblock %}

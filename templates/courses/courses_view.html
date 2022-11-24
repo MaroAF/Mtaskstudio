@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+{% block extra_head %}
+<!-- VIDEOJS -->
+<link href="https://vjs.zencdn.net/7.20.3/video-js.css" rel="stylesheet" />
+<script src="https://vjs.zencdn.net/ie8/1.1.2/videojs-ie8.min.js"></script>
+<link href="https://unpkg.com/@videojs/themes@1/dist/fantasy/index.css" rel="stylesheet">
+
+{% endblock extra_head %}
+{% block content %}
+<style>
+  body {
+    overflow-y: hidden;
+  }
+</style>
+<div class="sidebar">
+  <a data-slug="{{data.slug}}" data-number="1" class="active slide-btn" id="inicio">inicio</a>
+  {% if has_permission %}
+
+  {% for chapter in chapters %}
+  <label>Capitulo {{chapter.chapter_number}}</label>
+  <a data-slug="{{data.slug}}" data-number="{{chapter.chapter_number}}" class="slide-btn">{{chapter.title}}</a>
+
+  {% endfor %}
+  {% else %}
+  {% for chapter in chapters %}
+  <label>Capitulo {{chapter.chapter_number}}</label>
+  <a style="pointer-events:none;" data-slug="{{data.slug}}" data-number="{{chapter.chapter_number}}" class="slide-btn">{{chapter.title}} <i class="fa-solid fa-lock"></i></a>
+  {% endfor %}
+  {% endif %}
+</div>
+<div class="view-course">
+  <h2 id="dinamic-title">{{data.title}}</h2>
+  <video class="video-demo video-js vjs-theme-fantasy" id="source-video" controls preload="auto" data-setup="">
+    <source id="source-video" src="{{ data.video_course.url }}" type="video/mp4" />
+    <p class="vjs-no-js dark:text-dark-txt text-gray-500">
+      To view this video please enable JavaScript, and consider upgrading to a
+      web browser that
+      <a href="https://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
+    </p>
+  </video>
+  <div id="#contenido-dina"> {{data.short_des|safe}} </div>
+  
+
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+
+<script>
+  $('.main-menu').css('position', 'relative')
+  $('a').click(function () {
+    var botones = document.querySelectorAll('.slide-btn')
+    if (this.id == "inicio") {
+      if ($(this).hasClass("active")) {
+
+      }
+      else {
+        botones.forEach(botones => {
+          botones.classList.remove('active');
+        });
+        this.classList.add("active")
+        var slug = $(this).data('slug')
+        var number = $(this).data('number')
+        $.ajax({
+          type: 'GET',
+          url: '/cursos/' + slug + "/" + number,
+          success: function (data) {
+            $('#dinamic-title').empty()
+            $('#dinamic-title').append(data.course[0].title)
+            var url = encodeURIComponent(data.course[0].video_course)
+            $('#source-video_html5_api').attr("src", "/media/" + url)
+            $('#source-video').attr("src", "/media/" + url)
+
+          },
+          error: function (err) {
+            console.log(err)
+          }
+        })
+      }
+    }
+    else {
+      if ($(this).hasClass("active")) {
+
+      }
+      else {
+        botones.forEach(botones => {
+          botones.classList.remove('active');
+        });
+        this.classList.add("active")
+        var slug = $(this).data('slug')
+        var number = $(this).data('number')
+        $.ajax({
+          type: 'GET',
+          url: '/cursos/' + slug + "/" + number,
+          success: function (data) {
+            if(data.message == "No-permitido"){
+              Swal.fire({
+                title: 'Error!',
+                text: 'PARA OBTENER LOS PERMISOS CONTRATA UN PAQUETE',
+                icon: 'error',
+                confirmButtonText: 'Entendido'
+              })
+            }
+            else{
+            $('#dinamic-title').empty()
+            $('#dinamic-title').append(data.chapters[0].title)
+            var url = encodeURIComponent(data.chapters[0].video_chapter)
+            $('#source-video_html5_api').attr("src", "/media/" + url)
+            $('#source-video').attr("src", "/media/" + url)
+            }
+
+          },
+          error: function (err) {
+            console.log(err)
+          }
+        })
+      }
+    }
+  });
+</script>
+{% endblock extra_js %}

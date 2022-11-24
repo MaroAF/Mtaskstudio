@@ -1,0 +1,54 @@
+<header class="content-head">
+        
+    <div class="main-menu">
+        {% for header in headers %}
+        <div class="logo">
+            <button class="button btn-menu" onclick="window.location.href='{% url 'home' %}';">
+                <img src="{{header.logo.url}} " alt="">
+            </button>
+
+        </div>
+        {%endfor%}
+        <div class="button-divs">
+            <div>
+                <button class="button btn-menu" onclick="window.location.href='{% url 'schedule' %}';">
+                    Agendar Sesion
+                </button>
+            </div>
+            <div>
+                <button class="button btn-menu">
+                    Nuestros Trabajos
+                </button>
+            </div>
+            {% for header in headers %}
+            <div>
+                <button class="button btn-menu"
+                    onclick="location.href='https://api.whatsapp.com/send?phone=+{{header.number}}&text=Hola%20Mtask%20Studio.%20Me%20interesa%20contratarlos.';">
+                    <i class="fa-solid fa-phone"></i>
+                </button>
+            </div>
+            {%endfor%}
+            {% if user.is_authenticated %}
+            
+            <div class="dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <div class="photografy_profile" style="background-image: url({{user.perfil_photo.url}});"></div>
+                  </a>
+                  <ul class="dropdown-menu dropdown-menu" style="width:200px">
+                    <li class="user_fullname">{{user.full_name}}</li>
+                    <li class="user_subs">{{user.subscription.pricing.name}}</li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="{% url 'user:profile' user.username %}">Ver Perfil</a></li>
+                    <li><a class="dropdown-item" href="{% url 'account_logout' %}">Salir</a></li>
+                  </ul>
+              </div>
+            {% else %}
+            <div>
+                <button class="button btn-menu" onclick="window.location.href='{% url 'account_login' %}';">
+                    <i class="fa-solid fa-user"></i>
+                </button>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</header>

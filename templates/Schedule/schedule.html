@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="text-align: center; margin-top: 120px;">
+    <h1>Nuestros Sets</h1>
+</div>
+<hr>
+    <div class="sessions-wrapper">
+          <div class="l-container">
+            {% for schedule in schedules %}
+                <div class="b-game-card">
+                    <div class="b-game-card__cover" style="background-image: url({{schedule.image_v.url}});">
+                        <div class="text-card">
+                            <h2>{{schedule.title}}</h2>
+                            <button onclick="window.location.href='{% url 'set' schedule.slug %}';">AGENDAR</button>
+                        </div>
+                    </div>
+                    
+                </div>
+                
+            {% endfor %}
+          </div>
+    </div>
+    
+{% endblock %}

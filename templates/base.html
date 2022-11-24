@@ -1,0 +1,35 @@
+{% load static %}
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% block title %}<title>MtaskStudio</title>{% endblock title %} 
+    {% include 'components/head.html' %}
+    
+    {% include 'components/fonts.html' %}
+
+    {% block extra_head %}{% endblock extra_head %}
+    
+</head>
+
+<body>
+    {% include 'fragments/navbar.html' %}
+
+    {% block content %}
+    
+    
+    {% endblock %}
+    {% load sweetify %}
+    {% sweetify %}
+    
+  
+</body>
+<!-- JavaScript Bundle with Popper -->
+
+{% include 'components/javascript.html' %}
+
+{% block extra_js %}{% endblock extra_js %}
+
+</html>

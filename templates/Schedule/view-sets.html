@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+<div style="margin-top: 120px;">
+</div>
+
+<hr>
+<div class="sets-wrapper">
+    <div class="carrousel-images">
+
+        <div class="container">
+
+            <input type="radio" name="slider" id="item-1" checked="checked">
+            <input type="radio" name="slider" id="item-2">
+            <input type="radio" name="slider" id="item-3">
+            <div class="cards-sets">
+
+                <label class="card" for="item-1" id="song-1">
+                    <a data-bs-toggle="modal" href="#exampleModalToggle" role="button">
+                        <img src="{{schedule.image_v1.url}}" alt="song">
+                        <img src="{{place.image.url}}" class="Placeholder">
+                    </a>
+                </label>
+                <label class="card" for="item-2" id="song-2">
+                    <a data-bs-toggle="modal" href="#exampleModalToggle2" role="button">
+                        <img src="{{schedule.image_v2.url}}" alt="song">
+                        <img src="{{place.image.url}}" class="Placeholder">
+                    </a>
+                </label>
+                <label class="card" for="item-3" id="song-3">
+                    <a data-bs-toggle="modal" href="#exampleModalToggle3" role="button">
+                        <img src="{{schedule.image_v3.url}}" alt="song">
+                        <img src="{{place.image.url}}" class="Placeholder">
+                    </a>
+                </label>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="sets-info">
+        <h1>{{schedule.title}}</h1>
+        <h5>{{schedule.content|safe}}</h5>
+    </div>
+
+</div>
+<!-- <div class="modal " id="mymodal1" tabindex="-1">
+    <div class="modal-dialog" style="width: 100%;height:70vh;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Foto 1</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <img src="{{schedule.image_v1.url}}">
+                <img src="{{place.image.url}}" class="Placeholder">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-dark" id="ant-1" data-bs-dismiss="modal"
+                    data-bs-target="#mymodal3">Anterior</button>
+                <button type="button" class="btn btn-success" id="nex-1">Siguiente</button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div> -->
+
+<div class="modal fade " id="exampleModalToggle" aria-hidden="true" aria-labelledby="exampleModalToggleLabel"
+    tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered size">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalToggleLabel">Foto Sesion 1</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <img src="{{schedule.image_v1.url}}">
+                <img src="{{place.image.url}}" class="Placeholder">
+            </div>
+            <div class="modal-footer" style="position: absolute;width: 100%;top: 50%;border:none;justify-content:space-between">
+                <button class="btn btn-dark prev-btn-modal" data-bs-target="#exampleModalToggle3"
+                    data-bs-toggle="modal"><i class="fa-solid fa-chevron-left"></i></button>
+                <button class="btn btn-dark next-btn-modal" data-bs-target="#exampleModalToggle2"
+                    data-bs-toggle="modal"><i class="fa-solid fa-chevron-right"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade " id="exampleModalToggle2" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2"
+    tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered size">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalToggleLabel2">Foto Sesion 2</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <img src="{{schedule.image_v2.url}}">
+                <img src="{{place.image.url}}" class="Placeholder">
+            </div>
+            <div class="modal-footer" style="position: absolute;width: 100%;top: 50%;border:none;justify-content:space-between">
+                <button class="btn btn-dark prev-btn-modal"  data-bs-target="#exampleModalToggle"
+                    data-bs-toggle="modal"><i class="fa-solid fa-chevron-left"></i></button>
+                <button class="btn btn-dark next-btn-modal" data-bs-target="#exampleModalToggle3"
+                    data-bs-toggle="modal"><i class="fa-solid fa-chevron-right"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="exampleModalToggle3" aria-hidden="true" aria-labelledby="exampleModalToggleLabel3"
+    tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered size">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalToggleLabel2">Foto Sesion 3</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <img src="{{schedule.image_v3.url}}">
+                <img src="{{place.image.url}}" class="Placeholder">
+            </div>
+            <div class="modal-footer" style="position: absolute;width: 100%;top: 50%;border:none;justify-content:space-between">
+                <button class="btn btn-dark prev-btn-modal" data-bs-target="#exampleModalToggle2"
+                    data-bs-toggle="modal"><i class="fa-solid fa-chevron-left"></i></button>
+                <button class="btn btn-dark next-btn-modal" data-bs-target="#exampleModalToggle"
+                    data-bs-toggle="modal"><i class="fa-solid fa-chevron-right"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -2,23 +2,24 @@
 
 from pathlib import Path
 import os
+import environ
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+env = environ.Env()
+environ.Env.read_env()
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-tv&npy%jbyf$h4d)tptb@2^tpyjk9luz8xetj*#-#hj&%185$d'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG =env('DEBUG')
+SECRET_KEY = env('SECRET_KEY')
 
 ALLOWED_HOSTS = ['*']
 
+EMAIL_BACKEND='django.core.mail.backends.console.EmailBackend'
 
+ACCOUNT_FORMS = {
+    'signup': 'accounts.forms.CustomSignupForm',
+    'login': 'accounts.forms.CustomLoginForm',
+}
 # Application definition
 
 INSTALLED_APPS = [
@@ -29,9 +30,57 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
     'core',
-    'ckeditor',    
+    'accounts',
+    'ckeditor', 
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',  
+    'crispy_forms', 
+    'crispy_bootstrap5',
+    'rest_framework',
+    'sweetify',
+
 ]
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATON_CLASSES":(
+        "rest_framework.authentication.SessionAuthentication",
+        "rest_framework.authentication.TokenAuthentication",
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+}
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+
+CRISPY_TEMPLATE_PACK = "bootstrap5"
+
+AUTHENTICATION_BACKENDS = [
+
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+    # `allauth` specific authentication methods, such as login by e-mail
+    'allauth.account.auth_backends.AuthenticationBackend',
+
+]
+ACCOUNT_ALLOW_REGISTRATION = env.bool("DJANGO_ACCOUNT_ALLOW_REGISTRATION", True)
+ACCOUNT_AUTHENTICATION_METHOD="email"
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_EMAIL_UNIQUE = True
+ACCOUNT_LOGOUT_ON_GET = True
+ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+AUTH_USER_MODEL= "accounts.User"
+ACCOUNT_LOGIN_ATTEMPTS_LIMIT = 3
+ACCOUNT_LOGIN_ATTEMPTS_TIMEOUT=300
+LOGIN_REDIRECT_URL = "/"
+LOGIN_URL = "account_login"
+
+SITE_ID = 1
+LOGIN_REDIRECT_URL = '/'
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -43,12 +92,14 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+
 ROOT_URLCONF = 'project.urls'
+CSRF_TRUSTED_ORIGINS = ['https://95bf-2806-10ae-6-4f9a-354f-b0e3-d10d-2f27.ngrok.io','https://*.127.0.0.1']
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [''],
+        'DIRS': [os.path.join(BASE_DIR,'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -73,11 +124,9 @@ CKEDITOR_CONFIGS = {
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    "default": env.db("DATABASE_URL", default="postgres: ///Mtaskstudio"),
 }
+DATABASES ["default"]["ATOMIC_REQUESTS"] = True
 
 
 # Password validation
@@ -126,3 +175,7 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+STRIPE_PUBLIC_KEY = env('STRIPE_PUBLIC_KEY')
+STRIPE_SECRET_KEY = env('STRIPE_SECRET_KEY')
+STRIPE_WEBHOOK_SECRET = env('STRIPE_WEBHOOK_SECRET')
