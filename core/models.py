@@ -69,7 +69,7 @@ class Pricing(models.Model):
     name = models.CharField(max_length=100)
     slug = models.SlugField(unique=True)
     stripe_price_id = models.CharField(max_length=50)
-    price = models.DecimalField(decimal_places=3, max_digits=7)
+    price = models.IntegerField()
     currency = models.CharField(max_length=50)
 
     def __str__(self):
@@ -127,7 +127,7 @@ class Courses(models.Model):
 
 def post_email_confirmed(request, email_address, *args , **kwargs):
     user = User.objects.get(email = email_address.email)
-    free_trial_pricing = Pricing.objects.get(name = 'Free Trial')
+    free_trial_pricing = Pricing.objects.get(name = 'Free')
     subscription = Subscription.objects.create(
         user = user,
         pricing = free_trial_pricing
@@ -139,8 +139,7 @@ def post_email_confirmed(request, email_address, *args , **kwargs):
     )
     stripe_subscription = stripe.Subscription.create(
         customer = stripe_customer["id"],
-        items=[{'price':'price_1M4oJCLkpd3BJqT81AdkmAyT'}],
-        trial_period_days =7
+        items=[{'price':'price_1M7lAGLkpd3BJqT8HbStIWI6'}]
     )
 
     subscription.status= stripe_subscription["status"]

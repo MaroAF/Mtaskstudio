@@ -13,6 +13,7 @@ urlpatterns = [
     path('payment/create-subscription/', views.CreateSubscriptionView.as_view(), name='create-subscription'),
     path('payment/thank-you/',views.ThankYouView,name="thank-you"), 
     path('payment/retry-invoice/', views.RetryInvoiceView.as_view(), name='retry-invoice'),
+    path('change-subscription/', views.ChangeSubscriptionView.as_view(), name='change-subscription'),
     path('payment/webhook/', views.webhook, name='webhook'),
 
     path('cursos/<slug:slug>/<int:chapter_number>/', views.get_data_ajax, name='ajax')

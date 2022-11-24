@@ -4,9 +4,12 @@ from django.core.paginator import Paginator
 from core.models import *
 from django.conf import settings
 from rest_framework.views import APIView
+import sweetify
 from rest_framework.response import Response
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.signals import user_logged_in, user_logged_out
 from django.contrib.auth import get_user_model
+from allauth.account.views import LogoutView
 User = get_user_model()
 
 import stripe
@@ -23,6 +26,12 @@ def index(request):
         'banners':banner,
     }
     return render(request, 'index.html', context)
+
+# messages
+def login_succes(sender, user, request, **kwargs):
+    sweetify.success(request, f"Bienvenido {user}")
+
+user_logged_in.connect(login_succes)
 
 #sets
 def schedule(request):
@@ -115,12 +124,7 @@ def webhook(request):
     # Get the type of webhook event sent - used to check the status of PaymentIntents.
     event_type = event['type']
     data_object = data['object']
-    print("*****************")
-    print(data_object)
-    if event_type == 'customer.subscription.updated':
-        print("SUBSCRIPTION UPDATED")
     if event_type == 'invoice.paid':
-        print("SUSCRIPCION:" )
         webhook_object = data["object"]
         stripe_customer_id = webhook_object["customer"]
 
@@ -131,7 +135,7 @@ def webhook(request):
 
         user = User.objects.get(stripe_customer_id=stripe_customer_id)
         user.subscription.status = stripe_sub["status"]
-        user.subscription.stripe_subscription_id = webhook_object["subscription"]
+        user.subscription.stripe_subsciption_id = webhook_object["subscription"]
         user.subscription.pricing = pricing
         user.subscription.save()
         
@@ -147,7 +151,6 @@ def webhook(request):
         webhook_object = data["object"]
         stripe_customer_id = webhook_object["customer"]
         stripe_sub = stripe.Subscription.retrieve(webhook_object["id"])
-        print(stripe_sub)
         user = User.objects.get(stripe_customer_id=stripe_customer_id)
         user.subscription.status = stripe_sub["status"]
         user.subscription.save()
@@ -186,7 +189,9 @@ def paymentsView(request, slug):
         'headers':header,
         'prices':pricing,
         'STRIPE_PUBLIC_KEY': settings.STRIPE_PUBLIC_KEY
-    }    
+    }  
+    if subscription.is_active and subscription.pricing.stripe_price_id != "price_1M7lAGLkpd3BJqT8HbStIWI6":
+            return render(request, "payments/change.html", context)  
 
     return render(request, 'payments/checkout.html',context)
 
@@ -258,7 +263,30 @@ class RetryInvoiceView(APIView):
                 "error": {'message': str(e)}
             })
 
+class ChangeSubscriptionView(APIView):
+    def post(self, request, *args, **kwargs):
 
+        subscription_id = request.user.subscription.stripe_subsciption_id
+        print(subscription_id)
+        subscription = stripe.Subscription.retrieve(subscription_id)
+        try:
+            updatedSubscription = stripe.Subscription.modify(
+                subscription_id,
+                cancel_at_period_end=False,
+                items=[{
+                    'id': subscription['items']['data'][0].id,
+                    'price': request.data["priceId"],
+                }],
+                proration_behavior="always_invoice"
+            )
+
+            data = {}
+            data.update(updatedSubscription)
+            return Response(data)
+        except Exception as e:
+            return Response({
+                "error": {'message': str(e)}
+            })
 
 #PAGINA NO ENCONTRADA
 def page_not_found(request, exception):

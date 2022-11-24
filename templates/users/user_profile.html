@@ -15,7 +15,7 @@
         </div>
     </div>
     <div class="profile-options">2</div>
-    {% if user.subscription.pricing.name != "Free Trial" %}
+    {% if user.subscription.pricing.name != "Free" %}
     {% if user.subscription.status != "canceled"%}
     {% if user.subscription.pricing.name != "" %}
     <form method="post" class="py-3 mt-3 inline-flex float-right"

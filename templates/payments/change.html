@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static '\stylesheet\stripe.css' %}">
+<script src="https://polyfill.io/v3/polyfill.min.js?version=3.52.1&features=fetch"></script>
+<script src="https://js.stripe.com/v3/"></script>
+{% endblock extra_head %}
+{% block content %}
+<div style="text-align: center; margin-top: 120px;">
+    <h1>Pago de Suscripciones</h1>
+</div>
+<hr>
+<div class="sessions-wrapper ">
+        <form id="change-form" >
+          {% csrf_token %}
+          <button id="submit" type="submit">
+              <div class="spinner hidden" id="spinner"></div>
+              <span id="button-text">Buy Now</span>
+          </button>
+        </form>
+</div>
+{% endblock content %}
+
+
+ 
+{% block extra_js %}
+<script>
+  const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+  function updateSubscription(priceId, subscriptionId) {
+    return fetch("{% url 'change-subscription' %}", {
+      method: 'post',
+      headers: {
+        'Content-type': 'application/json',
+        'X-CSRFToken': csrftoken
+      },
+      body: JSON.stringify({
+        priceId: "{{ prices.stripe_price_id }}",
+      }),
+    })
+      .then(response => {
+        return response.json();
+      })
+      .then(response => {
+        window.location.href = "{% url 'user:profile' request.user.username %}"
+        return response;
+      });
+  }
+
+  function changeLoadingState(isLoading) {
+    if (isLoading) {
+      document.querySelector('#button-text').classList.add('hidden');
+      document.querySelector('#spinner').classList.remove('hidden');
+      document.querySelector('#change-form button').disabled = true;
+    } else {
+      document.querySelector('#button-text').classList.remove('hidden');
+      document.querySelector('#spinner').classList.add('hidden');
+      document.querySelector('#change-form button').disabled = false;
+    }
+  }
+
+  var form = document.getElementById('change-form');
+
+  form.addEventListener('submit', function (ev) {
+    ev.preventDefault();
+    changeLoadingState(true);
+    updateSubscription()
+  });
+</script>
+{% endblock extra_js %}

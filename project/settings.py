@@ -18,7 +18,6 @@ EMAIL_BACKEND='django.core.mail.backends.console.EmailBackend'
 
 ACCOUNT_FORMS = {
     'signup': 'accounts.forms.CustomSignupForm',
-    'login': 'accounts.forms.CustomLoginForm',
 }
 # Application definition
 
@@ -94,7 +93,7 @@ MIDDLEWARE = [
 
 
 ROOT_URLCONF = 'project.urls'
-CSRF_TRUSTED_ORIGINS = ['https://95bf-2806-10ae-6-4f9a-354f-b0e3-d10d-2f27.ngrok.io','https://*.127.0.0.1']
+CSRF_TRUSTED_ORIGINS = ['https://8b4d-2806-10ae-6-4f9a-354f-b0e3-d10d-2f27.ngrok.io','https://*.127.0.0.1']
 
 TEMPLATES = [
     {

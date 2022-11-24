@@ -1,6 +1,8 @@
 from django import forms
 from allauth.account.forms import SignupForm,LoginForm
 from django.contrib import messages
+from allauth.account.adapter import DefaultAccountAdapter
+import sweetify
 
 
 
@@ -30,8 +32,3 @@ class CustomSignupForm(SignupForm):
 
         # You must return the original result.
         return user
-class CustomLoginForm(LoginForm):
-    def form_valid(self, form):
-        response = super().form_valid(form)
-        print("Hello")
-        return response
