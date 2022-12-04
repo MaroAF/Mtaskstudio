@@ -28,7 +28,7 @@
 
 {% block extra_js %}
 <script>
-  const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 
 var stripe = Stripe("{{ STRIPE_PUBLIC_KEY }}");
 var elements = stripe.elements();

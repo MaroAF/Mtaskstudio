@@ -35,9 +35,10 @@ class Header(models.Model):
 def schedule_directory_path(instance,filename):
     return 'Sets/{0}/{1}'.format(instance.title, filename)
 
-class Schedule(models.Model):
+class Schedule(models.Model): 
     title = models.CharField(max_length=100,unique=True)
     slug = models.SlugField(max_length=100, unique=True,verbose_name='Link Automatico (NO MODIFICAR)')
+    stripe_price_id = models.CharField(max_length=50)
     image_v = models.ImageField(upload_to=schedule_directory_path,verbose_name='Imagen vertical(Portada del Set)')
     image_h = models.ImageField(null=True,blank=True,upload_to=schedule_directory_path,verbose_name='Imagen Banner(Si se requiere)')
     active = models.BooleanField(default=False)
@@ -63,6 +64,21 @@ class Placeholder(models.Model):
         verbose_name = ("Imagen negra")
         verbose_name_plural = ("Imagenes en negro")
 
+def works_directory_path(instance,filename):
+    return 'Works/{0}/{1}'.format(instance.title, filename)
+
+class Works(models.Model):
+    title = models.CharField(max_length=100,unique=True)
+    slug = models.SlugField(max_length=100, unique=True,verbose_name='Link Automatico (NO MODIFICAR)')
+    image_portada = models.ImageField(upload_to=works_directory_path,verbose_name='Imagen de Portada')
+    short_desc= RichTextField(null=True,blank=True,verbose_name='Descripcion corta')
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        verbose_name = ("Trabajo")
+        verbose_name_plural = ("Trabajos")
 #MODELO STRIPE
 
 class Pricing(models.Model):
@@ -70,6 +86,7 @@ class Pricing(models.Model):
     slug = models.SlugField(unique=True)
     stripe_price_id = models.CharField(max_length=50)
     price = models.IntegerField()
+    content = RichTextField(null=True,blank=True,verbose_name='Contenido')
     currency = models.CharField(max_length=50)
 
     def __str__(self):
@@ -135,7 +152,8 @@ def post_email_confirmed(request, email_address, *args , **kwargs):
 
     #crear cliente
     stripe_customer = stripe.Customer.create(
-        email = user.email        
+        email = user.email, 
+        name = user.full_name       
     )
     stripe_subscription = stripe.Subscription.create(
         customer = stripe_customer["id"],
@@ -147,7 +165,14 @@ def post_email_confirmed(request, email_address, *args , **kwargs):
     subscription.save()
     user.stripe_customer_id =stripe_customer["id"]
     user.save()
-    
+class ImagesAnimation(models.Model):
+    title = models.CharField(max_length=100)
+    logo = models.ImageField(upload_to="images/general",verbose_name='Imagen central (Logo)')
+    image1 = models.ImageField(upload_to="images/general",verbose_name='Imagen 1 de animacion')
+    image2 = models.ImageField(upload_to="images/general",verbose_name='Imagen 2 de animacion')
+    image3 = models.ImageField(upload_to="images/general",verbose_name='Imagen 3 de animacion')
+    image4 = models.ImageField(upload_to="images/general",verbose_name='Imagen 4 de animacion')
+
 class Chapter(models.Model):
     course = models.ForeignKey(Courses, on_delete=models.CASCADE, blank=True, null=True)
     chapter_number = models.IntegerField(blank=True,null=True)

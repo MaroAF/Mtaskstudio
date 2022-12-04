@@ -21,9 +21,13 @@ from django.contrib import messages
 def index(request):
     header = Header.objects.all()
     banner = Schedule.objects.all()
+    price = Pricing.objects.all().order_by('id')
+    imagesA = ImagesAnimation.objects.all()
     context = {
         'headers':header,
         'banners':banner,
+        'images':imagesA,
+        'prices':price,
     }
     return render(request, 'index.html', context)
 
@@ -54,6 +58,14 @@ def sets(request,slug):
     }
     return render(request, 'Schedule/view-sets.html',context)
 
+def works(request):
+    header = Header.objects.all()
+    works = Works.objects.all()
+    context = {
+        'headers':header,
+        'works':works,
+    }
+    return render(request, 'works/works.html',context)
 #CURSOS
 def courses(request):
     header = Header.objects.all()  
@@ -124,6 +136,9 @@ def webhook(request):
     # Get the type of webhook event sent - used to check the status of PaymentIntents.
     event_type = event['type']
     data_object = data['object']
+    if event_type == 'payment_intent.succeeded':
+        print(data_object)
+        
     if event_type == 'invoice.paid':
         webhook_object = data["object"]
         stripe_customer_id = webhook_object["customer"]
@@ -171,10 +186,13 @@ def pricesView(request):
 
 def ThankYouView(request):
     header = Header.objects.all()
-    context={
+    banner = Schedule.objects.all()
+    context = {
         'headers':header,
+        'banners':banner,
     }
-    return render(request, 'payments/thankyou.html', context)
+    sweetify.success(request, "Su compra fue realizada con exito", timer=3000)
+    return render(request, 'index.html', context)
 
 def paymentsView(request, slug):
     header = Header.objects.all()
@@ -194,6 +212,18 @@ def paymentsView(request, slug):
             return render(request, "payments/change.html", context)  
 
     return render(request, 'payments/checkout.html',context)
+
+def paymentsViewUnique(request, slug):
+    header = Header.objects.all()
+    schedule = get_object_or_404(Schedule, slug = slug)
+
+    context = {
+        'headers':header,
+        'schedule':schedule,
+        'STRIPE_PUBLIC_KEY': settings.STRIPE_PUBLIC_KEY
+    }  
+    return render(request, 'payments/checkout.html',context)
+
 
 class CreateSubscriptionView(APIView):
     def post(self, request, *args, **kwargs):
@@ -267,7 +297,6 @@ class ChangeSubscriptionView(APIView):
     def post(self, request, *args, **kwargs):
 
         subscription_id = request.user.subscription.stripe_subsciption_id
-        print(subscription_id)
         subscription = stripe.Subscription.retrieve(subscription_id)
         try:
             updatedSubscription = stripe.Subscription.modify(

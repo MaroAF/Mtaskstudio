@@ -5,6 +5,7 @@ from django.views.generic import FormView, View
 from django.urls import reverse
 from core.models import *
 import sweetify
+import stripe
 from django.contrib.auth import get_user_model
 User = get_user_model()
 
@@ -37,6 +38,20 @@ class CancelSubscriptionView(LoginRequiredMixin, FormView):
 class UserSubscriptionView(View):
     def get(self, request, username,*args, **kwargs):
         if(request.user.is_authenticated):
+            custumer_id = self.request.user.stripe_customer_id
+            data = stripe.PaymentIntent.list(customer=custumer_id)
+            iterate = len(data)
+            suma = 0
+            for e in range(iterate):
+                number = data["data"][e]["amount"]
+                suma = suma + number
+            size = len(str(suma))            
+            x = [int(a) for a in str(suma)]
+            x.pop()
+            x.pop()
+            print(x)
+
+
             header = Header.objects.all()
             user = get_object_or_404(User, username=username)
             context={

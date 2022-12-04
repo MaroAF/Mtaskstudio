@@ -26,7 +26,9 @@
                         
                         {% if banner.active == True %} 
                         <div class="carousel-item" data-bs-interval="8000">
-                            <img class="d-block w-100 image-banner" src="{{banner.image_h.url}}">
+                            <a href="{% url 'set' banner.slug %}">
+                                <img class="d-block w-100 image-banner" src="{{banner.image_h.url}}">
+                            </a>
 
                         </div>  
                                         {% endif %}
@@ -51,14 +53,72 @@
                 </div>
             </div>
             <section>
-                <div class="insta">
+                <div class="content-secction">
                     <h1>Instagram Galery</h1>
                     
                 <div class="elfsight-app-88d05eb4-3db8-4ade-b46e-32cc003e7118"></div>
+                <br>
             </section>
-            <section style="height: 600px;">
-                <a href="{% url 'courses' %}">CURSOS</a>
-                <a href="{% url 'prices' %}">precios</a>
+            <section class="course-seccion">
+                <div class="bg-course"></div>
+                <div class="bg-course bg2-course"></div>
+                <div class="bg-course bg3-course"></div>
+                <div class="content-secction">
+                    <div class="separator">
+                        <div class="img-animate">
+                            {% for image in images %}
+                            <div class="logo-animation" style="background-image: url('{{image.logo.url}}');"></div>
+                            
+                            <div class="element-1" style="background-image: url('{{image.image1.url}}')"></div>
+                            <div class="element-2" style="background-image: url('{{image.image2.url}}')"></div>
+                            <div class="element-3" style="background-image: url('{{image.image3.url}}')"></div>
+                            <div class="element-4" style="background-image: url('{{image.image4.url}}')"></div>
+                            {% endfor %}
+                        </div>
+                        <div class="btn-course">
+                            <a href="{% url 'courses' %}" >
+                                <h1>Ver cursos</h1>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="price-seccion">
+                <div class="content-secction">
+                    <h1>Precios</h1>
+
+                    <div class='pricing pricing-palden'>
+                        {% for price in prices %}
+                        {% if price.name == "Free" %}
+                        
+                        {% else %}
+                        <div class='pricing-item'>
+                          <div class='pricing-deco'>
+                            
+                            <svg class='pricing-deco-img' enable-background='new 0 0 300 100' height='100px' id='Layer_1' preserveAspectRatio='none' version='1.1' viewBox='0 0 300 100' width='300px' x='0px' xml:space='preserve' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns='http://www.w3.org/2000/svg' y='0px'>
+                              <path class='deco-layer deco-layer--1' d='M 30.913 43.944 q 17.493 -9.518 42.07 -23.83 Q 92.7385 30.381 112.494 40.648 Q 133.65 29.6035 154.806 18.559 l 41.688 23.644 Q 220.45 28.514 244.094 16.381 l 58.504 26.496 v 40.756 H 30.913 V 43.944 z' fill='#FFFFFF' opacity='0.6'></path>
+                              <path class='deco-layer deco-layer--2' d='M -35.667 44.628 l 49.422 -24.764 L 56.683 42.904 l 39.776 -25.223 L 135.991 43.389 L 176.251 17.196 l 49.962 28.861 v 54.396 H -35.667 V 44.628 z' fill='#FFFFFF' opacity='0.6'></path>
+                              <path class='deco-layer deco-layer--3' d='M 43.415 98.342 q 54.5665 -34.4635 109.133 -68.927 q 48.9915 33.957 97.983 67.914 v 3.716 H 42.401 L 43.415 98.342 z' fill='#FFFFFF' opacity='0.7'></path>
+                              <path class='deco-layer deco-layer--4' d='M -34.667 62.998 l 120.316 -27.839 Q 121.3005 52.3185 156.952 69.478 L 239.078 33.011 l 104.047 36.903 l 1.333 36.667 l -372 -2.954 L -34.667 62.998 z' fill='#FFFFFF'></path>
+                            </svg>
+                            <div class='pricing-price'><span class='pricing-currency'>$</span>{{price.price}}
+                              <span class='pricing-period'>/ mes</span>
+                            </div>
+                            <h3 class='pricing-title'>{{price.name}}</h3>
+                          </div>
+                          {{price.content|safe}}
+                          {% if user.is_authenticated %}
+                          <a class='pricing-action' href="{% url 'payment' price.slug%}">Seleccionar plan</a>
+                          {% else %}
+                          <a class='pricing-action' href="{% url 'account_signup' %}">Seleccionar plan</a>
+                          {% endif %}
+                        </div>                       
+                        {% endif %}
+      
+                        {% endfor %}
+                      </div>
+                </div>
+                                
             </section>
                 
                

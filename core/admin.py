@@ -19,6 +19,22 @@ class ScheduleAdmin(admin.ModelAdmin):
         'title'
     ]
 
+@admin.register(Works)
+class WorksAdmin(admin.ModelAdmin):
+    
+    prepopulated_fields = {'slug': ('title', )}
+    list_display = ['title']
+    search_fields = [
+        'title'
+    ]
+
+@admin.register(ImagesAnimation)
+class ImagesAnimationAdmin(admin.ModelAdmin):
+    list_display = ['title']
+    search_fields = [
+        'title'
+    ]
+
 @admin.register(Placeholder)
 class PlaceHolderAdmin(admin.ModelAdmin):
     list_display = ['title']

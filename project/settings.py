@@ -43,6 +43,8 @@ INSTALLED_APPS = [
 
 ]
 
+SWEETIFY_SWEETALERT_LIBRARY = 'sweetalert2'
+
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATON_CLASSES":(
         "rest_framework.authentication.SessionAuthentication",
@@ -93,7 +95,7 @@ MIDDLEWARE = [
 
 
 ROOT_URLCONF = 'project.urls'
-CSRF_TRUSTED_ORIGINS = ['https://8b4d-2806-10ae-6-4f9a-354f-b0e3-d10d-2f27.ngrok.io','https://*.127.0.0.1']
+CSRF_TRUSTED_ORIGINS = ['https://f277-2806-10ae-6-4f9a-3c4d-bbb5-689a-8053.ngrok.io','https://*.127.0.0.1']
 
 TEMPLATES = [
     {

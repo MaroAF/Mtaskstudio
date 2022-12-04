@@ -9,14 +9,8 @@ $(document).ready(function () {
       $(".main-menu").removeClass("fix-pos");
     }
   });
-
-  if ($('#exampleModalToggle').data('bs.modal').isShow == true) {
-    console.log("Modal is open");
-  }
-
-
+    
 });
-
 
 $(".carousel-item:first").addClass("active")
 $(".Bar-slide:first").addClass("active")

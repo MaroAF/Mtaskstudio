@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="text-align: center; margin-top: 120px;">
+    <h1>Nuestros Sets</h1>
+</div>
+<hr>
+    <div class="sessions-wrapper">
+        <ul class="Wcards">
+            {% for work in works %}
+            <li>
+              <a href="" class="Wcard">
+                <div style="background-image: url('{{work.image_portada.url}}');" class="Wcard__image" alt=""></div>
+                <div class="Wcard__overlay">
+                  <div class="Wcard__header">
+                    <svg class="Wcard__arc" xmlns="http://www.w3.org/2000/svg"><path /></svg>                     
+                    <img class="Wcard__thumb" src="https://i.imgur.com/7D7I6dI.png" alt="" />
+                    <div class="Wcard__header-text">
+                      <h3 class="Wcard__title">{{work.title}}</h3>  
+                    </div>
+                  </div>
+                  <p class="Wcard__description">{{work.short_desc|safe}}</p>
+                </div>
+              </a>      
+            </li>
+            {% endfor %}           
+               
+          </ul>
+    </div>
+    
+{% endblock %}
